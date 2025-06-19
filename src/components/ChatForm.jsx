@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-const ChatForm = ({setChatHistory}) => {
+const ChatForm = ({chatHistory, setChatHistory, generateBotResponse}) => {
   const inputRef = useRef();
 
   const handleFormSubmit = (e) => {
@@ -15,6 +15,9 @@ const ChatForm = ({setChatHistory}) => {
     // Add a "Thinking..." placeholder for the bot's response
     setTimeout(() => {
       setChatHistory((history) => [...history, { role: "model", text: "Thinking..." }]);
+
+      // Call the function to generate the bot's response
+      generateBotResponse([...chatHistory], {role: "user", text: userMessage});
     }, 600);
   }
 
@@ -26,4 +29,4 @@ const ChatForm = ({setChatHistory}) => {
   )
 }
 
-export default ChatForm
+export default ChatForm;
