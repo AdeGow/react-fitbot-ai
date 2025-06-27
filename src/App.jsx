@@ -6,8 +6,26 @@ import ChatMessage from "./components/ChatMessage"
 const App = () => {
   const [chatHistory, setChatHistory] = useState([]);
 
-  const generateBotResponse = (history) => {
-    console.log(history);
+  const generateBotResponse = async (history) => {
+    // Format chat history for the API request
+    history = history.map(({role, text}) => ({ role, parts: [{text}] }));
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: history})
+    }
+
+    try {
+      // Make the API call to Gemini to get the bot's response
+      const response = await fetch(import.meta.env.VITE_API_URL, requestOptions);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error.message || "Failed to fetch gemini api data");
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
