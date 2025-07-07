@@ -5,12 +5,13 @@ import ChatMessage from "./components/ChatMessage"
 
 const App = () => {
   const [chatHistory, setChatHistory] = useState([]);
+  const [showChatbot, setShowChatbot] = useState(false);
   const chatBodyRef = useRef();
 
   const generateBotResponse = async (history) => {
     // Helper function to update chat history
-    const updateHistory = (text) => {
-      setChatHistory(prev => [...prev.filter(msg => msg.text !== "Thinking..."), { role: "model", text }]);
+    const updateHistory = (text, isError = false) => {
+      setChatHistory(prev => [...prev.filter(msg => msg.text !== "Thinking..."), { role: "model", text, isError }]);
     };
 
     // Format chat history for the API request
@@ -33,7 +34,7 @@ const App = () => {
       updateHistory(apiResponseText);
 
     } catch (error) {
-      console.error(error);
+      updateHistory(error.message, true);
     }
   };
 
@@ -43,7 +44,12 @@ const App = () => {
   }, [chatHistory]);
 
   return (
-    <div className="container">
+    <div className={`container ${showChatbot ? "show-chatbot" : ""}`}>
+      <button onClick={() => setShowChatbot(prev => !prev)} id="chatbot-toggler">
+        <span className="material-symbols-rounded">mode_comment</span>
+        <span className="material-symbols-rounded">close</span>
+      </button>
+
       <div className="chatbot-popup">
         {/* Chatbot Header */}
         <div className="chat-header">
@@ -51,7 +57,7 @@ const App = () => {
             <ChatbotIcon />
             <h2 className="logo-text">Chatbot</h2>
           </div>
-          <button className="material-symbols-rounded">keyboard_arrow_down</button>
+          <button onClick={() => setShowChatbot(prev => !prev)} className="material-symbols-rounded">keyboard_arrow_down</button>
         </div>
 
         {/* Chatbot Body */}
