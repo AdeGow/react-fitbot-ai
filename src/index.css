@@ -11,19 +11,65 @@
 body {
   width: 100%;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-image: linear-gradient(to right bottom, #fcd6bc, #fbbd93, #f8a46c, #f28b45, #eb701a);
 }
 
+#chatbot-toggler {
+  position: fixed;
+  bottom: 30px;
+  right: 35px;
+  border: none;
+  background-color: #f8a46c;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+#chatbot-toggler span {
+  position: absolute;
+  color: #fff;
+}
+
+.container.show-chatbot #chatbot-toggler {
+  transform: rotate(90deg);
+}
+
+#chatbot-toggler span:last-child,
+.container.show-chatbot #chatbot-toggler span:first-child {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.container.show-chatbot #chatbot-toggler span:last-child {
+  opacity: 1;
+}
+
 .chatbot-popup {
-  position: relative;
+  position: fixed;
+  bottom: 90px;
+  right: 35px;
+  opacity: 0;
+  pointer-events: none;
   background-color: #fff;
+  transform: scale(0.2);
+  transform-origin: bottom right;
+  transition: all 0.2s ease-in-out;
   overflow: hidden;
   width: 420px;
   border-radius: 15px;
   box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1), 0 32px 64px -48px rgba(0, 0, 0, 0.5);
+}
+
+.container.show-chatbot .chatbot-popup{
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
 }
 
 .chatbot-popup .chat-header {
@@ -94,6 +140,10 @@ body {
   display: flex;
   align-items: center;
   gap: 11px;
+}
+
+.chat-body .message.error .message-text {
+  color: #FF0000;
 }
 
 .chat-body .bot-message svg {
@@ -188,4 +238,33 @@ body {
 
 .chat-form .message-input:valid ~ button {
   display: block;
+}
+
+@media (max-width: 520px) {
+  #chatbot-toggler{
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .chatbot-popup {
+    height: 100%;
+    width: 100%;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+  }
+
+  .chatbot-popup .chat-header {
+    padding: 12px 15px;
+  }
+
+  .chat-body {
+    height: calc(90% - 55px);
+    padding: 25px 15px;
+  }
+
+  .chat-footer {
+    padding: 10px 15px 15px;
+  }
+
 }
