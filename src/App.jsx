@@ -7,6 +7,11 @@ const App = () => {
   const [chatHistory, setChatHistory] = useState([]);
 
   const generateBotResponse = async (history) => {
+    // Helper function to update chat history
+    const updateHistory = (text) => {
+      setChatHistory(prev => [...prev.filter(msg => msg.text !== "Thinking..."), { role: "model", text }]);
+    };
+
     // Format chat history for the API request
     history = history.map(({role, text}) => ({ role, parts: [{text}] }));
 
@@ -22,7 +27,10 @@ const App = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error.message || "Failed to fetch gemini api data");
 
-      console.log(data);
+      // Clean and update chat history with the bot's response
+      const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim(); // Remove markdown bold formatting
+      updateHistory(apiResponseText);
+
     } catch (error) {
       console.error(error);
     }

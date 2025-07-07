@@ -17,7 +17,6 @@ const ChatForm = ({chatHistory, setChatHistory, generateBotResponse}) => {
 
     // Set updated chat state
     setChatHistory(fullNewHistory);
-    console.log("Chat history updated:", fullNewHistory);
 
     // Call bot response with up-to-date history (excluding placeholder)
     generateBotResponse([...chatHistory, userEntry]);
